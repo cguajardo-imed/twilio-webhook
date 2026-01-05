@@ -39,8 +39,7 @@ func Incoming(c *fiber.Ctx) error {
 
 	params := &api.FetchMessageParams{}
 
-	resp, err := client.Api.FetchMessage(body.MessageSid,
-		params)
+	resp, err := client.Api.FetchMessage(body.MessageSid, params)
 	if err != nil {
 		log.Fatal(err.Error())
 		return err
