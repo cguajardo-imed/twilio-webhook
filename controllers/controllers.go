@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/twilio/twilio-go"
 	api "github.com/twilio/twilio-go/rest/api/v2010"
@@ -28,11 +26,14 @@ type TwilioIncoming struct {
 
 func Incoming(c *fiber.Ctx) error {
 	var body TwilioIncoming
+
 	err := c.BodyParser(&body)
 	if err != nil {
 		log.Fatal(err.Error())
+		return err
 	}
-	log.Printf("Incoming: \nBODY: %-v\n", body)
+
+	log.Printf(">> Incoming: \nBODY: %-v\n", body)
 
 	client := twilio.NewRestClient()
 
@@ -41,8 +42,8 @@ func Incoming(c *fiber.Ctx) error {
 	resp, err := client.Api.FetchMessage(body.MessageSid,
 		params)
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatal(err.Error())
+		return err
 	} else {
 		log.Printf("Price: %d %v", resp.Price, *resp.PriceUnit)
 	}
